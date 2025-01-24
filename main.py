@@ -23,6 +23,25 @@ def out(station, date):
             "date":ndate,
             "temperature":outp}
 
+
+@app.route("/api/v1/<station>/")
+def alldata(station):
+    station = str(station).zfill(6)
+    df = pd.read_csv("E:\weather api\data\TG_STAID"+station+".txt",skiprows=20,parse_dates=['    DATE'])
+    result=df.to_dict(orient="records")
+    return result
+
+@app.route("/api/v1/yearly/<station>/<date>/")
+def alldataondate(station,date):
+    station = str(station).zfill(6)
+    df = pd.read_csv("E:\weather api\data\TG_STAID"+station+".txt",skiprows=20)
+    df['    DATE']=df['    DATE'].astype(str)
+    result=df[df['    DATE'].str.startswith(str(date))].to_dict(orient="records")  
+    
+    return result
+    
+   
+
 @app.route("/dct/<word>")
 def dit(word):
     df=pd.read_csv("E:\weather api\dict\dictionary.csv")
